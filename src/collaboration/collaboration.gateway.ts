@@ -1,11 +1,20 @@
-import { WebSocketGateway, SubscribeMessage, MessageBody } from '@nestjs/websockets';
+import {
+  WebSocketGateway,
+  SubscribeMessage,
+  MessageBody,
+} from '@nestjs/websockets';
 import { CollaborationService } from './collaboration.service';
 import { CreateCollaborationDto } from './dto/create-collaboration.dto';
 import { UpdateCollaborationDto } from './dto/update-collaboration.dto';
 
-@WebSocketGateway()
+@WebSocketGateway(89, { transports: ['websocket'] })
 export class CollaborationGateway {
   constructor(private readonly collaborationService: CollaborationService) {}
+
+  @SubscribeMessage('events')
+  handleEvent(@MessageBody() data: string): string {
+    return data;
+  }
 
   @SubscribeMessage('createCollaboration')
   create(@MessageBody() createCollaborationDto: CreateCollaborationDto) {
@@ -24,7 +33,10 @@ export class CollaborationGateway {
 
   @SubscribeMessage('updateCollaboration')
   update(@MessageBody() updateCollaborationDto: UpdateCollaborationDto) {
-    return this.collaborationService.update(updateCollaborationDto.id, updateCollaborationDto);
+    return this.collaborationService.update(
+      updateCollaborationDto.id,
+      updateCollaborationDto,
+    );
   }
 
   @SubscribeMessage('removeCollaboration')

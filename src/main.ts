@@ -15,6 +15,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new TransformInterceptor());
   // 设置全局管道做数据验证和转换
   app.useGlobalPipes(new ValidationPipe());
+  // 跨域
+  app.enableCors();
 
   // 设置swagger文档
   const config = new DocumentBuilder()

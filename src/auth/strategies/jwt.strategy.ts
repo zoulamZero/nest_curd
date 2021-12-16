@@ -27,6 +27,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     if (!existUser) {
       throw new UnauthorizedException('token不正确');
     }
-    return user;
+    return user; // 这里必须返回验证时传入的信息，不然后续无法取出
   }
 }
